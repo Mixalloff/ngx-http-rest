@@ -8,9 +8,17 @@ export class HttpRestService {
 
   constructor(protected http: Http) {}
 
-  public request(options: RequestOptionsArgs) : Observable<any>{
+  public request<T>(options: RequestOptionsArgs, producesType: T): Observable <T> {
     return this.http.request(options.url, options)
-      .map( (res: Response) => res.json() );
+      .map( (res: Response) => {
+        if (producesType === null) return null;
+        if (producesType === undefined) return res.json();
+        if (<any>producesType === String) return res.text();
+        if (<any>producesType === ArrayBuffer) return res.arrayBuffer();
+        if (<any>producesType === Blob) return res.blob();
+        if (res instanceof <any>producesType) return res;
+        return <T>res.json();
+      });
   }
 }
 
@@ -26,6 +34,11 @@ export let QueryParam = HttpRestUtils.addMetadata('query');
 
 // Headers
 export let Headers = HttpRestUtils.addMetadata('headers');
+
+// Produces
+export let Produces = HttpRestUtils.addMetadata('produces');
+export let NoResponse = HttpRestUtils.addMetadata('produces')(null);
+export let DefaultResponse = HttpRestUtils.addMetadata('produces')(Response);
 
 // Request methods
 export let GET = HttpRestUtils.requestMethod('Get');
