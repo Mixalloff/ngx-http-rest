@@ -31,6 +31,7 @@ export let PathParam = HttpRestUtils.addMetadata('path');
 export let Body = HttpRestUtils.addMetadata('body')(null);
 export let Query = HttpRestUtils.addMetadata('query');
 export let QueryParam = HttpRestUtils.addMetadata('query');
+export let QueryParams = HttpRestUtils.addMetadata('query')(null);
 
 // Headers
 export let Headers = HttpRestUtils.addMetadata('headers');

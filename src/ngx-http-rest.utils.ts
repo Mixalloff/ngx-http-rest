@@ -171,12 +171,16 @@ export class HttpRestUtils {
      || !target[RESOURSE_METADATA_ROOT].params[methodName].query) return undefined;
 
     const queryParams = new URLSearchParams();
+    const queryParamsObjectIndex = target[RESOURSE_METADATA_ROOT].params[methodName].query.default;
+    const queryMetadata = target[RESOURSE_METADATA_ROOT].params[methodName].query;
+    const queryParamsCollection = queryParamsObjectIndex != undefined
+                                ? args[queryParamsObjectIndex]
+                                : Object.keys(queryMetadata).reduce((mergedObj, paramName) =>
+                                  Object.assign(mergedObj, { [paramName]: args[queryMetadata[paramName]] }), {}
+                                );
 
-    Object.keys(target[RESOURSE_METADATA_ROOT].params[methodName].query)
-      .forEach(paramName => {
-        const index = target[RESOURSE_METADATA_ROOT].params[methodName].query[paramName];
-        if (paramName && args[index] != null) queryParams.set(paramName, args[index]);
-      });
+    Object.keys(queryParamsCollection)
+      .forEach(paramName => queryParams.set(paramName, queryParamsCollection[paramName]));
     return queryParams;
   }
 
