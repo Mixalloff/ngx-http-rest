@@ -1,10 +1,10 @@
 import { HttpRestService } from './ngx-http-rest.service';
-import { Http } from '@angular/http';
+import { HttpModule } from '@angular/http';
 import { NgModule } from '@angular/core';
 
-
 @NgModule({
-    providers: [HttpRestService, Http]
+    imports: [HttpModule],
+    providers: [HttpRestService]
 })
 export class HttpRestModule {
 }
