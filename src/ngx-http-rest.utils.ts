@@ -180,7 +180,11 @@ export class HttpRestUtils {
                                 );
 
     Object.keys(queryParamsCollection)
-      .forEach(paramName => queryParams.set(paramName, queryParamsCollection[paramName]));
+      .forEach(paramName => {
+        let value = queryParamsCollection[paramName];
+        if (!Array.isArray(value)) { value = [ value ]; }
+        value.forEach(curParam => queryParams.append(paramName, curParam));
+      });
     return queryParams;
   }
 
