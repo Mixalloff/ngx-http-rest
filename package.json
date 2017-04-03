@@ -8,5 +8,14 @@
     "typescript": "^2.2.2"
   },
   "author": "Mixalloff",
-  "license": "MIT"
+  "keywords": [
+    "angular",
+    "ng2",
+    "ngx",
+    "http",
+    "rest",
+    "api"
+  ],
+  "license": "MIT",
+  "repository": "https://github.com/Mixalloff/ngx-http-rest"
 }

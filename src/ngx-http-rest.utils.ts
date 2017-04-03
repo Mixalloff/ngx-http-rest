@@ -46,12 +46,12 @@ export class HttpRestUtils {
   }
 
   /**
-   * Установка метаданных
-   * @param type Тип сущности, на которую вешается декоратор
-   * @param value Значение
-   * @param target Прототип
-   * @param metaName Название декоратора
-   * @param entityData данные сущности
+   * Set up metadada
+   * @param type Entity type
+   * @param value Value of metadata
+   * @param target Prototype of current object
+   * @param metaName Decorator name
+   * @param entityData Entity extra data
    */
   private static constructMetadata(metaName: string, entityType: ResourceMetadataType, value: any, target: any, entityData?: ExtraEntityData) {
     target[RESOURSE_METADATA_ROOT] = target[RESOURSE_METADATA_ROOT] || {};
