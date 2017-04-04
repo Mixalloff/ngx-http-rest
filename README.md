@@ -61,7 +61,7 @@ interface GoodsItem {
 export class SomeRestService extends HttpRestService {
 
   @GET
-  getGoods(@QueryParams /* Object with queryParams { [name: string]: [value: any] } */ queryObj: any): any {}
+  getGoods(@QueryParams /* Object with queryParams { [name: string]: [value: any] } */ queryObj?: any): any {}
 
   @GET
   getGoodsBySomeParam(@QueryParam('sales') /* ...?sales= */ isSold: boolean): any {}
@@ -106,7 +106,7 @@ import { SomeRestService } from './some-rest.service';
   styleUrls: ['./test-component.component.css'],
   providers: [SomeRestService]
 })
-export class TestComponent  implements OnInit {
+export class TestComponent implements OnInit {
   constructor(private someRestService: SomeRestService){}
 
   ngOnInit() {
@@ -116,3 +116,19 @@ export class TestComponent  implements OnInit {
   }
 }
 ```
+
+### Description
+Available annotations:
+1) Request methods
+@GET, @POST, @PUT, @DELETE, @OPTIONS, @HEAD, @PATCH - marks methods implementing the corresponding requests
+2) Added settings
+ - @Path - set path of url for request. Combined class @Path annotation value and current method @Path. Path params passed with ":". For example @Path('/someurl/:someParam')
+ - @Headers - add array of headers to your request (if annotate class, then all class methods getting this headers)
+ - @Produces - setting expected response type. By default Reponse transformed by .json() method
+ - @NoResponse (alias for @Produces(null)) - if expected empty response body, you need to set that annotation
+ - @DefaultResponse (alias for @Produces(Response)) - response doesn`t transformed with .json() method. Returned pure Response object
+3) Parameters
+ - @PathParam (or @Path) - pass current parameter by name to collected url. Example: someFunc(@PathParam('id') itemId: number) {}
+ - @Body - pass body object into request. Ex.: someMethod(@Body bodyObject: any){}
+ - @QueryParam - pass single query parameters into request. Ex.: someMethod(@QueryParam('a') a: any, @QueryParam('b') b: any) {}. someMethod(1, 2) -> ..requested_url..?a=1&b=2
+ - @QueryParams - pass object with few query params. Ex.: someMethod(@QueryParams queryObj: any){}. someMethod({x: 1, y: 2, z: 3}) -> ..requested_url..?x=1&y=2&z=3
