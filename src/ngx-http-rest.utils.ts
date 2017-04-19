@@ -153,7 +153,7 @@ export class HttpRestUtils {
       const [absolutePrefix, ...paths] = methodUrlWithParams.split('/');
       return `${ absolutePrefix }//${ paths.join('/') }`;
     }
-    return methodUrlWithParams;
+    return `/${ methodUrlWithParams }`;
   }
 
   private static collectBody(target: any, methodName: string, args: any[]) {
