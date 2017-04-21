@@ -85,7 +85,7 @@ export class HttpRestUtils {
   }
 
   private static transform(target: any, methodName: string, args: any[]) {
-    const transformFunc = target[RESOURSE_METADATA_ROOT].methods && [methodName]
+    const transformFunc = target[RESOURSE_METADATA_ROOT].methods && target[RESOURSE_METADATA_ROOT].methods[methodName]
                         ? target[RESOURSE_METADATA_ROOT].methods[methodName].interceptor
                         : null;
     return transformFunc ? args = transformFunc(args) : args;
