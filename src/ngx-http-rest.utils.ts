@@ -79,7 +79,7 @@ export class HttpRestUtils {
   }
 
   public static interceptor(transformFunction: Function) {
-    return function(target: Http, methodName: string, descriptor: any) {
+    return function(target: any, methodName: string, descriptor: any) {
       target[RESOURSE_METADATA_ROOT] = target[RESOURSE_METADATA_ROOT] || {};
       target[RESOURSE_METADATA_ROOT].methods = target[RESOURSE_METADATA_ROOT].methods || {};
       target[RESOURSE_METADATA_ROOT].methods[methodName] = target[RESOURSE_METADATA_ROOT].methods[methodName] || {};
@@ -95,7 +95,7 @@ export class HttpRestUtils {
   }
 
   public static requestMethod(requestMethodName: string): any {
-    return (target: Http, key: string, descriptor: any) => {
+    return (target: any, key: string, descriptor: any) => {
       descriptor.value = function (...args: any[]) {
         const url = HttpRestUtils.collectUrl(target, key, args);
         const body = HttpRestUtils.collectBody(target, key, args);
