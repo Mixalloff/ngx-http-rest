@@ -1,24 +1,12 @@
 import { HttpRestUtils } from './ngx-http-rest.utils';
 import { Observable } from 'rxjs/Rx';
 import { Injectable } from '@angular/core';
-import { Http, RequestOptionsArgs, Response } from '@angular/http';
+import { Http, RequestOptionsArgs, Response, XHRBackend, RequestOptions } from '@angular/http';
 
 @Injectable()
-export class HttpRestService {
-
-  constructor(protected http: Http) {}
-
-  public request<T>(options: RequestOptionsArgs, producesType: T): Observable <T> {
-    return this.http.request(options.url, options)
-      .map( (res: Response) => {
-        if (producesType === null) return null;
-        if (producesType === undefined) return res.json();
-        if (<any>producesType === String) return res.text();
-        if (<any>producesType === ArrayBuffer) return res.arrayBuffer();
-        if (<any>producesType === Blob) return res.blob();
-        if (res instanceof <any>producesType) return res;
-        return <T>res.json();
-      });
+export class HttpRestService extends Http {
+  constructor(backend: XHRBackend, defaultOptions: RequestOptions) {
+    super(backend, defaultOptions);
   }
 }
 

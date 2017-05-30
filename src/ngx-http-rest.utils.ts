@@ -1,5 +1,6 @@
+import { Observable } from 'rxjs';
 import { HttpRestService } from './ngx-http-rest.service';
-import { RequestOptionsArgs, URLSearchParams, QueryEncoder, Headers as HttpHeaders } from '@angular/http';
+import { RequestOptionsArgs, URLSearchParams, QueryEncoder, Headers as HttpHeaders, Response } from '@angular/http';
 
 type ResourceMetadataType = 'class'|'methods'|'params'|'props';
 interface ExtraEntityData {
@@ -85,7 +86,7 @@ export class HttpRestUtils {
   }
 
   private static transform(target: any, methodName: string, args: any[]) {
-    const transformFunc = target[RESOURSE_METADATA_ROOT].methods && target[RESOURSE_METADATA_ROOT].methods[methodName]
+    const transformFunc = target[RESOURSE_METADATA_ROOT].methods && [methodName]
                         ? target[RESOURSE_METADATA_ROOT].methods[methodName].interceptor
                         : null;
     return transformFunc ? args = transformFunc(args) : args;
@@ -107,10 +108,23 @@ export class HttpRestUtils {
           method: requestMethodName
         };
 
-        return this.request(params, producesType)
-          .map(response => HttpRestUtils.transform(target, key, response));
+        return this.request(params.url, params, producesType)
+          .map(response => HttpRestUtils.transform(target, key, response))
+          .map(response => HttpRestUtils.produceByType(producesType, response));
       };
     };
+  }
+
+  private static produceByType<T>(producesType: T, res: Response): any {
+    switch(true) {
+      case producesType === null: return null;
+      case producesType === undefined: return res.json();
+      case <any>producesType === String: return res.text();
+      case <any>producesType === ArrayBuffer: return res.arrayBuffer();
+      case <any>producesType === Blob: return res.blob();
+      case res instanceof <any>producesType: return res;
+      default: <T>res.json();
+    }
   }
 
   private static produce(target: any, methodName: string, args: any[]) {
