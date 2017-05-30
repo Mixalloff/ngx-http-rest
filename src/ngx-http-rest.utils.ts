@@ -1,6 +1,6 @@
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { HttpRestService } from './ngx-http-rest.service';
-import { RequestOptionsArgs, URLSearchParams, QueryEncoder, Headers as HttpHeaders, Response } from '@angular/http';
+import { RequestOptionsArgs, URLSearchParams, QueryEncoder, Headers as HttpHeaders, Response, Http } from '@angular/http';
 
 type ResourceMetadataType = 'class'|'methods'|'params'|'props';
 interface ExtraEntityData {
@@ -10,6 +10,8 @@ interface ExtraEntityData {
 const RESOURSE_METADATA_ROOT = 'resources_metadata';
 
 export class HttpRestUtils {
+
+  public static http: Http;
 
   public static addMetadata(decoratorName: string) {
     return function(annotations: any) {
@@ -77,7 +79,7 @@ export class HttpRestUtils {
   }
 
   public static interceptor(transformFunction: Function) {
-    return function(target: HttpRestService, methodName: string, descriptor: any) {
+    return function(target: Http, methodName: string, descriptor: any) {
       target[RESOURSE_METADATA_ROOT] = target[RESOURSE_METADATA_ROOT] || {};
       target[RESOURSE_METADATA_ROOT].methods = target[RESOURSE_METADATA_ROOT].methods || {};
       target[RESOURSE_METADATA_ROOT].methods[methodName] = target[RESOURSE_METADATA_ROOT].methods[methodName] || {};
@@ -85,15 +87,15 @@ export class HttpRestUtils {
     };
   }
 
-  private static transform(target: any, methodName: string, args: any[]) {
+  private static transform(target: any, methodName: string, response: Response) {
     const transformFunc = target[RESOURSE_METADATA_ROOT].methods && [methodName]
                         ? target[RESOURSE_METADATA_ROOT].methods[methodName].interceptor
                         : null;
-    return transformFunc ? args = transformFunc(args) : args;
+    return transformFunc ? transformFunc(response) : response;
   }
 
-  public static requestMethod(requestMethodName: string) {
-    return function (target: HttpRestService, key: string, descriptor: any) {
+  public static requestMethod(requestMethodName: string): any {
+    return (target: Http, key: string, descriptor: any) => {
       descriptor.value = function (...args: any[]) {
         const url = HttpRestUtils.collectUrl(target, key, args);
         const body = HttpRestUtils.collectBody(target, key, args);
@@ -108,7 +110,7 @@ export class HttpRestUtils {
           method: requestMethodName
         };
 
-        return this.request(params.url, params, producesType)
+        return HttpRestUtils.http.request(params.url, params)
           .map(response => HttpRestUtils.transform(target, key, response))
           .map(response => HttpRestUtils.produceByType(producesType, response));
       };
