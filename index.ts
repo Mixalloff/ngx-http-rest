@@ -1,5 +1,6 @@
 import { HttpRestUtils } from "./src/ngx-http-rest.utils";
 export * from './src/ngx-http-rest.module';
+import { Response } from '@angular/http';
 
 // Interceptor
 export let Interceptor = HttpRestUtils.interceptor;
