@@ -2,6 +2,22 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { RequestOptionsArgs, URLSearchParams, QueryEncoder, Headers as HttpHeaders, Response, Http } from '@angular/http';
 
+export function path(annotations: any) {
+  return (...args: any[]) => HttpRestUtils.decorate.apply(this, ['path', annotations, ...args]);
+}
+export function body(annotations: any) {
+  return (...args: any[]) => HttpRestUtils.decorate.apply(this, ['body', annotations, ...args]);
+}
+export function query(annotations: any) {
+  return (...args: any[]) => HttpRestUtils.decorate.apply(this, ['query', annotations, ...args]);
+}
+export function headers(annotations: any) {
+  return (...args: any[]) => HttpRestUtils.decorate.apply(this, ['headers', annotations, ...args]);
+}
+export function produces(annotations: any) {
+  return (...args: any[]) => HttpRestUtils.decorate.apply(this, ['produces', annotations, ...args]);
+}
+
 type ResourceMetadataType = 'class'|'methods'|'params'|'props';
 interface ExtraEntityData {
   keyName: string;
@@ -13,15 +29,7 @@ export class HttpRestUtils {
 
   public static http: Http;
 
-  public static addMetadata(decoratorName: string) {
-    return function(annotations: any) {
-      return function(...args: any[]) {
-        HttpRestUtils.decorate.apply(this, [decoratorName, annotations, ...args]);
-      };
-    };
-  }
-
-  private static decorate(decoratorName: string, annotations: any, ...args: any[]) {
+  public static decorate(decoratorName: string, annotations: any, ...args: any[]) {
     switch (args.length) {
         case 1: {
           const [target] = args;
@@ -199,7 +207,7 @@ export class HttpRestUtils {
       .forEach(paramName => {
         let value = queryParamsCollection[paramName];
         if (!Array.isArray(value)) { value = [ value ]; }
-        value.forEach(curParam => queryParams.append(paramName, curParam));
+        value.forEach((curParam: any) => queryParams.append(paramName, curParam));
       });
     return queryParams;
   }

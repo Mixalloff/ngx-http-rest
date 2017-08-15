@@ -1,6 +1,6 @@
 {
   "name": "ngx-http-rest",
-  "version": "0.1.2",
+  "version": "0.2.2",
   "devDependencies": {
     "@angular/http": "^4.0.0",
     "@angular/core": "^4.0.0",
