@@ -1,17 +1,18 @@
-import { HttpModule, XHRBackend, RequestOptions, Http } from '@angular/http';
 import { NgModule, APP_INITIALIZER } from '@angular/core';
 import { HttpRestUtils } from "./ngx-http-rest.utils";
+import { HttpClient } from "@angular/common/http";
+import { HttpClientModule } from "@angular/common/http";
 
 @NgModule({
-    imports: [HttpModule],
+    imports: [HttpClientModule],
     providers: [
-      { provide: APP_INITIALIZER, useFactory: onAppInit, multi: true, deps: [Http] }
+      { provide: APP_INITIALIZER, useFactory: onAppInit, multi: true, deps: [HttpClient] }
     ]
 })
 export class HttpRestModule {
 }
 
-export function onAppInit(http: Http) {
+export function onAppInit(http: HttpClient) {
   return function () {
     HttpRestUtils.http = http;
   }

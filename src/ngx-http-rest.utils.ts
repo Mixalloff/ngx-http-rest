@@ -1,6 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { RequestOptionsArgs, URLSearchParams, QueryEncoder, Headers as HttpHeaders, Response, Http } from '@angular/http';
+import { HttpClient, HttpParams, HttpHeaders } from "@angular/common/http";
+
+interface httpRequestOptions {
+  body?: any;
+  headers?: HttpHeaders;
+  params?: HttpParams;
+  reportProgress?: boolean;
+  responseType?: 'arraybuffer' | 'blob' | 'json' | 'text';
+  withCredentials?: boolean;
+}
 
 export function path(annotations: any) {
   return (...args: any[]) => HttpRestUtils.decorate.apply(this, ['path', annotations, ...args]);
@@ -14,7 +23,7 @@ export function query(annotations: any) {
 export function headers(annotations: any) {
   return (...args: any[]) => HttpRestUtils.decorate.apply(this, ['headers', annotations, ...args]);
 }
-export function produces(annotations: any) {
+export function produces(annotations: 'arraybuffer' | 'blob' | 'json' | 'text') {
   return (...args: any[]) => HttpRestUtils.decorate.apply(this, ['produces', annotations, ...args]);
 }
 
@@ -27,7 +36,7 @@ const RESOURSE_METADATA_ROOT = 'resources_metadata';
 
 export class HttpRestUtils {
 
-  public static http: Http;
+  public static http: HttpClient;
 
   public static decorate(decoratorName: string, annotations: any, ...args: any[]) {
     switch (args.length) {
@@ -86,22 +95,6 @@ export class HttpRestUtils {
     target[RESOURSE_METADATA_ROOT][entityType] = metadataObj;
   }
 
-  public static interceptor(transformFunction: Function) {
-    return function(target: any, methodName: string, descriptor: any) {
-      target[RESOURSE_METADATA_ROOT] = target[RESOURSE_METADATA_ROOT] || {};
-      target[RESOURSE_METADATA_ROOT].methods = target[RESOURSE_METADATA_ROOT].methods || {};
-      target[RESOURSE_METADATA_ROOT].methods[methodName] = target[RESOURSE_METADATA_ROOT].methods[methodName] || {};
-      target[RESOURSE_METADATA_ROOT].methods[methodName].interceptor = transformFunction;
-    };
-  }
-
-  private static transform(target: any, methodName: string, response: Response) {
-    const transformFunc = target[RESOURSE_METADATA_ROOT].methods && [methodName]
-                        ? target[RESOURSE_METADATA_ROOT].methods[methodName].interceptor
-                        : null;
-    return transformFunc ? transformFunc(response) : response;
-  }
-
   public static requestMethod(requestMethodName: string): any {
     return (target: any, key: string, descriptor: any) => {
       descriptor.value = function (...args: any[]) {
@@ -110,31 +103,15 @@ export class HttpRestUtils {
         const search = HttpRestUtils.collectQueryParams(target, key, args);
         const headers = HttpRestUtils.collectHeaders(target, key, args);
         const producesType = HttpRestUtils.produce(target, key, args);
-        const params: RequestOptionsArgs = {
-          url,
+        const params: httpRequestOptions = {
           body,
-          search,
+          params: search,
           headers,
-          method: requestMethodName
+          responseType: producesType
         };
-
-        return HttpRestUtils.http.request(params.url, params)
-          .map(response => HttpRestUtils.transform(target, key, response))
-          .map(response => HttpRestUtils.produceByType(producesType, response));
+        return HttpRestUtils.http.request(requestMethodName, url, params);
       };
     };
-  }
-
-  private static produceByType<T>(producesType: T, res: Response): any {
-    switch(true) {
-      case producesType === null: return null;
-      case producesType === undefined: return res.json();
-      case <any>producesType === String: return res.text();
-      case <any>producesType === ArrayBuffer: return res.arrayBuffer();
-      case <any>producesType === Blob: return res.blob();
-      case res instanceof <any>producesType: return res;
-      default: <T>res.json();
-    }
   }
 
   private static produce(target: any, methodName: string, args: any[]) {
@@ -194,7 +171,7 @@ export class HttpRestUtils {
      || !target[RESOURSE_METADATA_ROOT].params[methodName]
      || !target[RESOURSE_METADATA_ROOT].params[methodName].query) return undefined;
 
-    const queryParams = new URLSearchParams();
+    let queryParams = new HttpParams();
     const queryParamsObjectIndex = target[RESOURSE_METADATA_ROOT].params[methodName].query.default;
     const queryMetadata = target[RESOURSE_METADATA_ROOT].params[methodName].query;
     const queryParamsCollection = queryParamsObjectIndex != undefined
@@ -207,7 +184,7 @@ export class HttpRestUtils {
       .forEach(paramName => {
         let value = queryParamsCollection[paramName];
         if (!Array.isArray(value)) { value = [ value ]; }
-        value.forEach((curParam: any) => queryParams.append(paramName, curParam));
+        value.forEach((curParam: any) => queryParams = queryParams.append(paramName, curParam));
       });
     return queryParams;
   }
