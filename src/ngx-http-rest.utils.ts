@@ -1,16 +1,22 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpClient, HttpParams, HttpHeaders } from "@angular/common/http";
+import { HttpObserve } from "@angular/common/http/src/client";
 
 interface httpRequestOptions {
   body?: any;
   headers?: HttpHeaders;
   params?: HttpParams;
+  observe?: HttpObserve;
   reportProgress?: boolean;
   responseType?: 'arraybuffer' | 'blob' | 'json' | 'text';
   withCredentials?: boolean;
 }
 
+
+export function observe(annotations: any) {
+  return (...args: any[]) => HttpRestUtils.decorate.apply(this, ['observe', annotations, ...args]);
+}
 export function path(annotations: any) {
   return (...args: any[]) => HttpRestUtils.decorate.apply(this, ['path', annotations, ...args]);
 }
@@ -103,15 +109,25 @@ export class HttpRestUtils {
         const search = HttpRestUtils.collectQueryParams(target, key, args);
         const headers = HttpRestUtils.collectHeaders(target, key, args);
         const producesType = HttpRestUtils.produce(target, key, args);
+        const observe = HttpRestUtils.getObserve(target, key, args)
         const params: httpRequestOptions = {
           body,
           params: search,
           headers,
-          responseType: producesType
+          responseType: producesType,
+          observe
         };
         return HttpRestUtils.http.request(requestMethodName, url, params);
       };
     };
+  }
+
+  private static getObserve(target: any, methodName: string, args: any[]) {
+    if (target[RESOURSE_METADATA_ROOT].methods
+      && target[RESOURSE_METADATA_ROOT].methods[methodName]) {
+       return target[RESOURSE_METADATA_ROOT].methods[methodName].observe;
+     }
+     return undefined;
   }
 
   private static produce(target: any, methodName: string, args: any[]) {

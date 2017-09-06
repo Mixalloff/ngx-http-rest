@@ -1,6 +1,6 @@
 export * from './src/ngx-http-rest.module';
 import { Response } from '@angular/http';
-import { HttpRestUtils, path, body, query, headers, produces } from "ngx-http-rest/src/ngx-http-rest.utils";
+import { HttpRestUtils, path, body, query, headers, produces, observe } from "ngx-http-rest/src/ngx-http-rest.utils";
 
 export let Path = path;
 export let PathParam = path;
@@ -8,6 +8,7 @@ export let Body = body(null);
 export let Query = query(null);
 export let QueryParam = query;
 export let QueryParams = query(null);
+export let Observe = observe;
 
 // Headers
 export let Headers = headers;
