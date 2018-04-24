@@ -5,14 +5,14 @@ It contains:
 
   - Annotations for http methods (@GET, @POST, @PUT, @DELETE, @OPTIONS, @HEAD, @PATCH)
   - Annotations for adding headers, setting produces results and intercepting response
-  - Params anotations
+  - Params annotations
 
 ### Installation
 
 Install through npm:
 
 ```sh
-$ npm install ngx-http-rest --save
+$ npm install ngx-http-annotations --save
 ```
 
 
@@ -39,7 +39,7 @@ export class AppModule {
 
 
 ```typescript
-import { HttpRestService, GET, Path, PathParam, QueryParam, QueryParams } from 'ngx-http-rest';
+import { HttpRestService, GET, Path, PathParam, QueryParam, QueryParams } from 'ngx-http-annotations';
 import { Injectable } from '@angular/core';
 import RestConfig from 'app/core/configs/rest.config';
 
@@ -71,7 +71,6 @@ export class SomeRestService extends HttpRestService {
   getGoodsItemById(@PathParam('id') itemId: number): any {}
 
   @GET
-  @Interceptor(SomeRestService.logInterceptor) /* Set response interceptor */
   @Path('/:id/child/:childId') /* Few path params */
   getChildrenOfSomeGoods(@PathParam('id') id: number,
                          @PathParam('childId') childId: number
@@ -83,13 +82,9 @@ export class SomeRestService extends HttpRestService {
   createGoods(@Body /* Body of POST request */ goodsObject: GoodsItem): any {}
 
   @DELETE
-  @NoResponse /* This method doesn`t process the body of response */
   @Path('/:id')
   removeGoodsById(@PathParam('id') itemId: number): any {}
 
-  private static logInterceptor(response: any) {
-    console.log(response);
-  }
 
 }
 ```
@@ -125,9 +120,8 @@ Available annotations:
  - @Path - set path of url for request. Combined class @Path annotation value and current method @Path. Path params passed with ":". For example @Path('/someurl/:someParam')
  - @Headers - set headers for request (if annotate class, then all class methods getting this headers. method Headers merge with class Headers)
  - @Produces - setting expected response type. By default Reponse transformed by .json() method
- - @NoResponse (alias for @Produces(null)) - if expected empty response body, you need to set that annotation
- - @DefaultResponse (alias for @Produces(Response)) - response doesn`t transformed with .json() method. Returned pure Response object
-3) Parameters
+ - @Observes - setting http observes.
+ 3) Parameters
  - @PathParam (or @Path) - pass current parameter by name to collected url. Example: someFunc(@PathParam('id') itemId: number) {}
  - @Body - pass body object into request. Ex.: someMethod(@Body bodyObject: any){}
  - @QueryParam - pass single query parameters into request. Ex.: someMethod(@QueryParam('a') a: any, @QueryParam('b') b: any) {}. someMethod(1, 2) -> ..requested_url..?a=1&b=2

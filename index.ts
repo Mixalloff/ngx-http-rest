@@ -17,7 +17,7 @@ export let Headers = headers;
 export let Produces = produces;
 
 // Request methods
-export const GET = HttpRestUtils.requestMethod('Get')
+export let GET = HttpRestUtils.requestMethod('Get');
 export let POST = HttpRestUtils.requestMethod('Post');
 export let PUT = HttpRestUtils.requestMethod('Put');
 export let DELETE = HttpRestUtils.requestMethod('Delete');
