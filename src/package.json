@@ -1,23 +1,14 @@
 {
   "name": "ngx-http-annotations",
   "version": "0.5.2",
-  "main": "index.ts",
-  "files": [
-    "src"
-  ],
-  "baseUrl": "./src",
-  "directories": {
-    "src": "src"
-  },
+  "module": "ngx-http-annotations.es5.js",
+  "es2015": "ngx-http-annotations.js",
+  "typings": "ngx-http-annotations.d.ts",
   "devDependencies": {
-    "@angular/core": "^5.0.0",
     "@angular/http": "^5.0.0",
-    "@angular/compiler": "^5.0.0",
-    "@angular/compiler-cli": "^5.0.0",
-    "rxjs": "^5.5.2",
-    "zone.js": "^0.8.14",
-    "typescript": "~2.4.2",
-    "rollup": "^0.51.8"
+    "@angular/core": "^5.0.0",
+    "rxjs": "^5.0.1",
+    "typescript": "^2.2.2"
   },
   "author": "Mixalloff, manudss",
   "keywords": [

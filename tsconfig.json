@@ -4,10 +4,6 @@
     "declaration": false,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "lib": [
-      "es2016",
-      "dom"
-    ],
     "mapRoot": "./",
     "module": "es2015",
     "moduleResolution": "node",
@@ -18,9 +14,14 @@
       "../node_modules/@types"
     ],
     "files": [
-      "index.d.ts",
+      "index.ts",
       "src/ngx-http-annotations.module.ts",
       "src/ngx-http-annotations.module.ts"
-    ]
+    ],
+    "rootDir": "./src",
+    "lib": ["es2015", "dom"],
+    "skipLibCheck": true,
+    // don't auto-discover @types/node, it results in a ///<reference in the .d.ts output
+    "types": []
   }
 }
