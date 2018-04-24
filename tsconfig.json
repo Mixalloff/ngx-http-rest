@@ -16,6 +16,11 @@
     "target": "es5",
     "typeRoots": [
       "../node_modules/@types"
+    ],
+    "files": [
+      "index.d.ts",
+      "src/ngx-http-annotations.module.ts",
+      "src/ngx-http-annotations.module.ts"
     ]
   }
 }

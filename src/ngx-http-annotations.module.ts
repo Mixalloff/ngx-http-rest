@@ -1,5 +1,5 @@
 import { NgModule, APP_INITIALIZER } from '@angular/core';
-import { HttpRestUtils } from "./ngx-http-rest.utils";
+import { HttpRestUtils } from "./ngx-http-annotations.utils";
 import { HttpClient } from "@angular/common/http";
 import { HttpClientModule } from "@angular/common/http";
 

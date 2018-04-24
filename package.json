@@ -1,7 +1,7 @@
 {
   "name": "ngx-http-annotations",
-  "version": "0.5.0",
-  "main": "index.ts",
+  "version": "0.5.1",
+  "main": "index.d.ts",
   "files": [
     "src"
   ],
