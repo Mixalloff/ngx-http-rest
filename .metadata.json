@@ -1,0 +1,4 @@
+{
+  "skipMetadataEmit": true,
+  "skipTemplateCodegen": true
+}

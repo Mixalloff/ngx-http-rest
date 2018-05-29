@@ -1,6 +1,7 @@
 export * from './src/ngx-http-annotations.module';
+export * from './src/ngx-http-annotations.utils';
 import { Response } from '@angular/http';
-import { HttpRestUtils, path, body, query, headers, produces, observe } from "src/ngx-http-annotations.utils";
+import { HttpRestUtils, path, body, query, headers, produces, observe } from "./src/ngx-http-annotations.utils";
 
 export let Path = path;
 export let PathParam = path;

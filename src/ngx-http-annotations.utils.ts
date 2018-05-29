@@ -39,10 +39,10 @@ interface ExtraEntityData {
   index: number;
 }
 const RESOURSE_METADATA_ROOT = 'resources_metadata';
-
+// @dynamic
 export class HttpRestUtils {
 
-  public static http: HttpClient;
+  public static http: HttpClient = null;
 
   public static decorate(decoratorName: string, annotations: any, ...args: any[]) {
     switch (args.length) {
@@ -102,6 +102,7 @@ export class HttpRestUtils {
   }
 
   public static requestMethod(requestMethodName: string): any {
+      // @dynamic
     return (target: any, key: string, descriptor: any) => {
       descriptor.value = function (...args: any[]) {
         const url = HttpRestUtils.collectUrl(target, key, args);

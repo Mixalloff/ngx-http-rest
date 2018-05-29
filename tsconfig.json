@@ -3,6 +3,8 @@
     "baseUrl": "",
     "declaration": false,
     "emitDecoratorMetadata": true,
+    "skipMetadataEmit": true,
+    "skipTemplateCodegen": true,
     "experimentalDecorators": true,
     "lib": [
       "es2016",
@@ -18,9 +20,13 @@
       "../node_modules/@types"
     ],
     "files": [
-      "index.d.ts",
+      "public_api.ts",
       "src/ngx-http-annotations.module.ts",
       "src/ngx-http-annotations.module.ts"
     ]
+  },
+  "angularCompilerOptions": {
+    "skipMetadataEmit": true,
+    "skipTemplateCodegen": true
   }
 }

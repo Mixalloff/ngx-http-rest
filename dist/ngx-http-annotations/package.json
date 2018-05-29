@@ -1,13 +1,11 @@
 {
   "name": "ngx-http-annotations",
+  "description": "Somes annotations to call http with angular like @GET, @PUT, @POST etc...",
   "version": "0.5.2",
-  "main": "public_api.ts",
+  "main": "bundles/ngx-http-annotations.umd.js",
   "files": [
     "src"
   ],
-  "scripts": {
-    "build": "ng-packagr -p ng-package.json"
-  },
   "directories": {
     "src": "src"
   },
@@ -31,7 +29,7 @@
     "typescript": "2.7.2",
     "zone.js": "0.8.26"
   },
-  "author": "Mixalloff, manudss",
+  "author": "Mixalloff, Manudss",
   "keywords": [
     "angular",
     "ng2",
@@ -43,5 +41,17 @@
     "api"
   ],
   "license": "MIT",
-  "repository": "https://github.com/manudss/ngx-http-annotations"
+  "repository": "https://github.com/manudss/ngx-http-annotations",
+  "module": "fesm5/ngx-http-annotations.js",
+  "es2015": "fesm2015/ngx-http-annotations.js",
+  "esm5": "esm5/ngx-http-annotations.js",
+  "esm2015": "esm2015/ngx-http-annotations.js",
+  "fesm5": "fesm5/ngx-http-annotations.js",
+  "fesm2015": "fesm2015/ngx-http-annotations.js",
+  "typings": "ngx-http-annotations.d.ts",
+  "metadata": "ngx-http-annotations.metadata.json",
+  "sideEffects": false,
+  "dependencies": {
+    "tslib": "^1.9.0"
+  }
 }
