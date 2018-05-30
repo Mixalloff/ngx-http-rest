@@ -17,8 +17,14 @@ interface httpRequestOptions {
 export function observe(annotations: any) {
   return (...args: any[]) => HttpRestUtils.decorate.apply(this, ['observe', annotations, ...args]);
 }
-export function path(annotations: any) {
-  return (...args: any[]) => HttpRestUtils.decorate.apply(this, ['path', annotations, ...args]);
+export function path(annotations: any | null) {
+  return (...args: any[]) => {
+    if (!annotations) { // if not given, use args name function;
+      annotations = args[0];
+    }
+      console.log('Path : ', annotations, ...args);
+    return HttpRestUtils.decorate.apply(this, ['path', annotations, ...args]);
+  }
 }
 export function body(annotations: any) {
   return (...args: any[]) => HttpRestUtils.decorate.apply(this, ['body', annotations, ...args]);
@@ -80,6 +86,8 @@ export class HttpRestUtils {
    * @param entityData Entity extra data
    */
   private static constructMetadata(metaName: string, entityType: ResourceMetadataType, value: any, target: any, entityData?: ExtraEntityData) {
+    console.log('constructMetadata :', metaName, entityType, value, target, entityData);
+
     target[RESOURSE_METADATA_ROOT] = target[RESOURSE_METADATA_ROOT] || {};
     target[RESOURSE_METADATA_ROOT][entityType] = target[RESOURSE_METADATA_ROOT][entityType] || {};
 
@@ -110,15 +118,17 @@ export class HttpRestUtils {
         const search = HttpRestUtils.collectQueryParams(target, key, args);
         const headers = HttpRestUtils.collectHeaders(target, key, args);
         const producesType = HttpRestUtils.produce(target, key, args);
-        const observe = HttpRestUtils.getObserve(target, key, args)
+        const observe = HttpRestUtils.getObserve(target, key, args);
         const params: httpRequestOptions = {
           body,
           params: search,
-          headers,
+          // headers,
           responseType: producesType,
           observe
         };
+        console.log('before request ', requestMethodName, url, params, headers);
         return HttpRestUtils.http.request(requestMethodName, url, params);
+        // return HttpRestUtils.http.request(requestMethodName, url);
       };
     };
   }
