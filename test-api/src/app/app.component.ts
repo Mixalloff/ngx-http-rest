@@ -14,6 +14,7 @@ export class AppComponent implements OnInit {
   public post3: any;
   public post4: any;
   public post5: any;
+  public todos: any;
 
   constructor(private api: ApiService) {}
 
@@ -41,8 +42,12 @@ export class AppComponent implements OnInit {
         this.post5 = post;
         });
 
-    }
-      );
+    });
+
+    this.api.getTodosNotDone().subscribe((todos)=> {
+      console.log('todos :', todos);
+      this.todos = todos;
+    });
   }
 
 

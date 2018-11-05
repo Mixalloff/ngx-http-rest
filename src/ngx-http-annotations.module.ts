@@ -15,7 +15,6 @@ export class HttpRestModule {
 }
 
 export function onAppInit(http: HttpClient) {
-    console.log('App Init : ', http, HttpRestUtils.http);
   return function () {
     HttpRestUtils.http = http;
   }

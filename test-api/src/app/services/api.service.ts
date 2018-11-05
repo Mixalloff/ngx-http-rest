@@ -11,9 +11,9 @@ import {
   PUT,
   DELETE
 } from '../../../../public_api';
-import {HttpClient} from "@angular/common/http";
-import {from, Observable} from "rxjs";
-import {flatMap, map, mergeAll, take, tap} from 'rxjs/operators';
+import {HttpClient} from '@angular/common/http';
+import {from, Observable} from 'rxjs';
+import {flatMap, map, mergeAll, take, tap, filter} from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -67,6 +67,14 @@ export class ApiService {
   public deletePost(@PathParam('id') postId: number): Observable<any> {
     //return this.http.request('DELETE', 'https://jsonplaceholder.typicode.com/posts/'+id);
     return null;
+  }
+
+  @GET
+  @Path('todos')
+  public getTodosNotDone(@ResponseObservable res: Observable<any> = undefined): Observable<any> {
+    //return this.http.request('GET', 'https://jsonplaceholder.typicode.com/todos');
+    return res.pipe(
+      map(todos => todos.filter(todo => !todo.completed)));
   }
 
 

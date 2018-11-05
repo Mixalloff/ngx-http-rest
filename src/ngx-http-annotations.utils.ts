@@ -52,8 +52,7 @@ export class HttpRestUtils {
   public static http: HttpClient = null;
 
   public static decorate(decoratorName: string, annotations: any, ...args: any[]) {
-      console.info ('decorate : ', decoratorName, annotations, args);
-    switch (args.length) {
+     switch (args.length) {
         case 1: {
           const [target] = args;
           HttpRestUtils.constructMetadata.apply(this, [ decoratorName, 'class', annotations, target.prototype ]);
@@ -88,7 +87,6 @@ export class HttpRestUtils {
    * @param entityData Entity extra data
    */
   private static constructMetadata(metaName: string, entityType: ResourceMetadataType, value: any, target: any, entityData?: ExtraEntityData) {
-    console.log('constructMetadata :', metaName, entityType, value, target, entityData);
 
     target[RESOURSE_METADATA_ROOT] = target[RESOURSE_METADATA_ROOT] || {};
     target[RESOURSE_METADATA_ROOT][entityType] = target[RESOURSE_METADATA_ROOT][entityType] || {};
@@ -129,12 +127,10 @@ export class HttpRestUtils {
           responseType: producesType,
           observe
         };
-        console.log('before request ', requestMethodName, url, params);
           let request = HttpRestUtils.http.request(requestMethodName, url, params);
 
           const responseIndex = HttpRestUtils.collectResponseIndex(target, key, args);
 
-          console.warn('responseIndex : ', responseIndex, args);
           if (responseIndex >= 0) {
             const newArgs = args;
             if (args.length > responseIndex) {
@@ -143,12 +139,10 @@ export class HttpRestUtils {
               newArgs.splice(responseIndex, 0, request);
             }
 
-              console.warn('call orininal function : ', newArgs);
             return originalFunction(...newArgs);
           }
 
           return request;
-        // return HttpRestUtils.http.request(requestMethodName, url);
       };
     };
   }
@@ -252,11 +246,7 @@ export class HttpRestUtils {
                         : {};
     const mergedHeaders = Object.assign({}, classHeaders, methodHeaders);
 
-    /*const httpHeaders = new HttpHeaders();
-    for (const header in mergedHeaders) {
-      httpHeaders.append(header, mergedHeaders[header]);
-    }
-    return httpHeaders;*/
+
     return mergedHeaders;
   }
 }
