@@ -1,4 +1,4 @@
-# ngx-http-rest
+# ngx-http-annotations
 
 This library allows to interact with rest api in your angular app.
 It contains:
@@ -6,6 +6,8 @@ It contains:
   - Annotations for http methods (@GET, @POST, @PUT, @DELETE, @OPTIONS, @HEAD, @PATCH)
   - Annotations for adding headers, setting produces results and intercepting response
   - Params annotations
+  
+  forked from : https://github.com/Mixalloff/ngx-http-rest 
 
 ### Installation
 
@@ -23,7 +25,7 @@ Example of using library.
 1) Plug the HttpRestModule into your AppModule
 
 ```typescript
-import { HttpRestModule } from 'ngx-http-rest';
+import { HttpRestModule } from 'ngx-http-annotations';
 import { NgModule } from '@angular/core';
 
 @NgModule({
@@ -39,7 +41,7 @@ export class AppModule {
 
 
 ```typescript
-import { HttpRestService, GET, Path, PathParam, QueryParam, QueryParams } from 'ngx-http-annotations';
+import { HttpRestService, GET, POST, DELETE, Path, PathParam, Body, QueryParam, QueryParams, ResponseObservable } from 'ngx-http-annotations';
 import { Injectable } from '@angular/core';
 import RestConfig from 'app/core/configs/rest.config';
 
@@ -84,6 +86,15 @@ export class SomeRestService extends HttpRestService {
   @DELETE
   @Path('/:id')
   removeGoodsById(@PathParam('id') itemId: number): any {}
+  
+  @GET
+  @Path('posts')
+  /**
+  * getPostForUserId(3, 2) : call the the url /posts?userId=2 and only take 3 results
+  */
+  public getPostForUserId(number: number, @QueryParam('userId') userId: number, @ResponseObservable res: Observable<any> = undefined): Observable<any> {
+    return res.pipe(map((response) => response.slice(0, number)));
+  }
 
 
 }
@@ -126,3 +137,21 @@ Available annotations:
  - @Body - pass body object into request. Ex.: someMethod(@Body bodyObject: any){}
  - @QueryParam - pass single query parameters into request. Ex.: someMethod(@QueryParam('a') a: any, @QueryParam('b') b: any) {}. someMethod(1, 2) -> ..requested_url..?a=1&b=2
  - @QueryParams - pass object with few query params. Ex.: someMethod(@QueryParams queryObj: any){}. someMethod({x: 1, y: 2, z: 3}) -> ..requested_url..?x=1&y=2&z=3
+ - @ResponseObservable - specify in witch function params, the response observable will be added. Ex.: someMethod(@ResponseObservable res: Observable<any> = undefined){ /* transform request */ return res; }. need to initialise as undefined to pass compile error, and return a response. 
+ 
+ 
+ #### Transform response with all rxjs function
+ 
+ By adding the parameters @ResponseObservable you can specify, where add the observable response, 
+ 
+  ```typescript
+    
+    @GET
+    @Path('posts')
+    /**
+    * getPostForUserId(3, 2) : call the the url /posts?userId=2 and only take 3 results
+    */
+    public getPostForUserId(number: number, @QueryParam('userId') userId: number, @ResponseObservable res: Observable<any> = undefined): Observable<any> {
+      return res.pipe(map((response) => response.slice(0, number)));
+    }
+  ```
