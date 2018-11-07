@@ -1,1 +1,3 @@
 node_modules
+/test-api/node_modules/
+/dist

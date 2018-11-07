@@ -18,11 +18,18 @@ export function observe(annotations: any) {
   return (...args: any[]) => HttpRestUtils.decorate.apply(this, ['observe', annotations, ...args]);
 }
 export function path(annotations: any) {
-  return (...args: any[]) => HttpRestUtils.decorate.apply(this, ['path', annotations, ...args]);
+  return (...args: any[]) => {
+    return HttpRestUtils.decorate.apply(this, ['path', annotations, ...args]);
+  }
 }
 export function body(annotations: any) {
   return (...args: any[]) => HttpRestUtils.decorate.apply(this, ['body', annotations, ...args]);
 }
+
+export function response(annotations: any) {
+  return (...args: any[]) => HttpRestUtils.decorate.apply(this, ['response', annotations, ...args]);
+}
+
 export function query(annotations: any) {
   return (...args: any[]) => HttpRestUtils.decorate.apply(this, ['query', annotations, ...args]);
 }
@@ -39,13 +46,13 @@ interface ExtraEntityData {
   index: number;
 }
 const RESOURSE_METADATA_ROOT = 'resources_metadata';
-
+// @dynamic
 export class HttpRestUtils {
 
-  public static http: HttpClient;
+  public static http: HttpClient = null;
 
   public static decorate(decoratorName: string, annotations: any, ...args: any[]) {
-    switch (args.length) {
+     switch (args.length) {
         case 1: {
           const [target] = args;
           HttpRestUtils.constructMetadata.apply(this, [ decoratorName, 'class', annotations, target.prototype ]);
@@ -80,6 +87,7 @@ export class HttpRestUtils {
    * @param entityData Entity extra data
    */
   private static constructMetadata(metaName: string, entityType: ResourceMetadataType, value: any, target: any, entityData?: ExtraEntityData) {
+
     target[RESOURSE_METADATA_ROOT] = target[RESOURSE_METADATA_ROOT] || {};
     target[RESOURSE_METADATA_ROOT][entityType] = target[RESOURSE_METADATA_ROOT][entityType] || {};
 
@@ -102,22 +110,39 @@ export class HttpRestUtils {
   }
 
   public static requestMethod(requestMethodName: string): any {
+      // @dynamic
     return (target: any, key: string, descriptor: any) => {
+      let originalFunction = descriptor.value;
       descriptor.value = function (...args: any[]) {
         const url = HttpRestUtils.collectUrl(target, key, args);
         const body = HttpRestUtils.collectBody(target, key, args);
         const search = HttpRestUtils.collectQueryParams(target, key, args);
         const headers = HttpRestUtils.collectHeaders(target, key, args);
         const producesType = HttpRestUtils.produce(target, key, args);
-        const observe = HttpRestUtils.getObserve(target, key, args)
-        const params: httpRequestOptions = {
+        const observe = HttpRestUtils.getObserve(target, key, args);
+        const params: any = {
           body,
           params: search,
           headers,
           responseType: producesType,
           observe
         };
-        return HttpRestUtils.http.request(requestMethodName, url, params);
+          let request = HttpRestUtils.http.request(requestMethodName, url, params);
+
+          const responseIndex = HttpRestUtils.collectResponseIndex(target, key, args);
+
+          if (responseIndex >= 0) {
+            const newArgs = args;
+            if (args.length > responseIndex) {
+                newArgs[responseIndex] = request;
+            } else {
+              newArgs.splice(responseIndex, 0, request);
+            }
+
+            return originalFunction(...newArgs);
+          }
+
+          return request;
       };
     };
   }
@@ -135,7 +160,7 @@ export class HttpRestUtils {
      && target[RESOURSE_METADATA_ROOT].methods[methodName]) {
       return target[RESOURSE_METADATA_ROOT].methods[methodName].produces;
     }
-    return undefined;
+    return 'json';
   }
 
   private static collectUrl(target: any, methodName: string, args: any[]) {
@@ -182,12 +207,21 @@ export class HttpRestUtils {
     return args[index];
   }
 
+  private static collectResponseIndex(target: any, methodName: string, args: any[]) {
+    if (!target[RESOURSE_METADATA_ROOT].params
+     || !target[RESOURSE_METADATA_ROOT].params[methodName]
+     || !target[RESOURSE_METADATA_ROOT].params[methodName].response) return undefined;
+
+    const index = target[RESOURSE_METADATA_ROOT].params[methodName].response.default;
+    return index;
+  }
+
   private static collectQueryParams(target: any, methodName: string, args: any[]) {
     if (!target[RESOURSE_METADATA_ROOT].params
      || !target[RESOURSE_METADATA_ROOT].params[methodName]
      || !target[RESOURSE_METADATA_ROOT].params[methodName].query) return undefined;
 
-    let queryParams = new HttpParams();
+    let queryParams = {};
     const queryParamsObjectIndex = target[RESOURSE_METADATA_ROOT].params[methodName].query.default;
     const queryMetadata = target[RESOURSE_METADATA_ROOT].params[methodName].query;
     const queryParamsCollection = queryParamsObjectIndex != undefined
@@ -200,7 +234,7 @@ export class HttpRestUtils {
       .forEach(paramName => {
         let value = queryParamsCollection[paramName];
         if (!Array.isArray(value)) { value = [ value ]; }
-        value.forEach((curParam: any) => queryParams = queryParams.append(paramName, curParam));
+        value.forEach((curParam: any) => queryParams [paramName] = curParam);
       });
     return queryParams;
   }
@@ -212,10 +246,7 @@ export class HttpRestUtils {
                         : {};
     const mergedHeaders = Object.assign({}, classHeaders, methodHeaders);
 
-    const httpHeaders = new HttpHeaders();
-    for (const header in mergedHeaders) {
-      httpHeaders.append(header, mergedHeaders[header]);
-    }
-    return httpHeaders;
+
+    return mergedHeaders;
   }
 }
