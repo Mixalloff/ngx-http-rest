@@ -10,7 +10,7 @@ import {
   ResponseObservable,
   PUT,
   DELETE
-} from '../../../../public_api';
+} from '../../../projects/ngx-http-annotations/src/public_api';
 import {HttpClient} from '@angular/common/http';
 import {from, Observable} from 'rxjs';
 import {flatMap, map, mergeAll, take, tap, filter} from 'rxjs/operators';

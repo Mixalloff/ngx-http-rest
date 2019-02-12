@@ -1,6 +1,6 @@
-export * from './src/ngx-http-annotations.module';
-export * from './src/ngx-http-annotations.utils';
-import {HttpRestUtils, path, body, query, headers, produces, observe, response} from "./src/ngx-http-annotations.utils";
+export * from './lib/ngx-http-annotations.module';
+export * from './lib/ngx-http-annotations.utils';
+import {HttpRestUtils, path, body, query, headers, produces, observe, response} from "./lib/ngx-http-annotations.utils";
 
 export let Path = path;
 export let PathParam = path;
@@ -8,6 +8,7 @@ export let Body = body(null);
 export let ResponseObservable = response(null);
 export let Query = query(null);
 export let QueryParam = query;
+export let QueryParams = query;
 export let Observe = observe;
 
 // Headers

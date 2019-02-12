@@ -1,6 +1,6 @@
 {
   "name": "ngx-http-annotations",
-  "version": "0.5.2",
+  "version": "0.6.3",
   "$schema": "./node_modules/ng-packagr/ng-package.schema.json",
   "src": "src",
   "dest": "dist/ngx-http-annotations",

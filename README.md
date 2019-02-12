@@ -155,3 +155,20 @@ Available annotations:
       return res.pipe(map((response) => response.slice(0, number)));
     }
   ```
+
+
+### Change logs 
+
+0.6.x
+ -> updates to latest versions of Angular 
+ -> Rename librery to ngx-http-annotations
+ -> add @ResponseObservable to transform response. 
+ 
+0.6.2 et 0.6.3 
+ -> update to build library with angular, to avoid error when build in --prod 
+ 
+
+### Source and issues 
+
+Code are located in github : https://github.com/manudss/ngx-http-annotations
+

@@ -1,0 +1,10 @@
+{
+  "name": "ngx-http-annotations",
+  "version": "0.6.2",
+  "$schema": "../../ngx-http-annotations/node_modules/ng-packagr/ng-package.schema.json",
+  "dest": "../../dist/ngx-http-annotations",
+  "deleteDestPath": false,
+  "lib": {
+    "entryFile": "src/public_api.ts"
+  }
+}

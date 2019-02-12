@@ -1,0 +1,7 @@
+{
+  "$schema": "../../ngx-http-annotations/node_modules/ng-packagr/ng-package.schema.json",
+  "dest": "../../dist/ngx-http-annotations",
+  "lib": {
+    "entryFile": "src/public_api.ts"
+  }
+}
