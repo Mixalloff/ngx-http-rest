@@ -1,8 +1,16 @@
 {
   "name": "ngx-http-annotations",
-  "version": "0.6.2",
+  "version": "0.6.3",
+  "description": "This is a library to angular 6+ to use http request via decorator/annotations",
   "peerDependencies": {
-    "@angular/common": "^6.0.0-rc.0 || ^6.0.0",
-    "@angular/core": "^6.0.0-rc.0 || ^6.0.0"
+    "@angular/common": ">=6.0.0",
+    "@angular/core": ">=6.0.0"
+  },
+  "keywords" :["Angular","Library","httpClient","annotation","ng","decorator"],
+  "author": "Mixalloff, Manudss",
+  "license" : "MIT",
+  "repository": {
+    "type" : "git",
+    "url" : "https://github.com/manudss/ngx-http-annotations"
   }
 }

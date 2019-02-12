@@ -1,13 +1,18 @@
 {
   "name": "ngx-http-annotations",
-  "version": "0.6.2",
+  "version": "0.6.3",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "build_lib": "ng build ngx-http-annotations && npm run copy-readme",
+    "copy-readme": "copy .\\README.md .\\dist\\ngx-http-annotations",
+    "npm_pack": "cd dist/ngx-http-annotations && npm pack",
+    "package": "npm run build_lib && npm run npm_pack",
+    "publish": "cd dist/ngx-http-annotations && npm publish"
   },
   "private": true,
   "dependencies": {

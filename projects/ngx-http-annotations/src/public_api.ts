@@ -8,6 +8,7 @@ export let Body = body(null);
 export let ResponseObservable = response(null);
 export let Query = query(null);
 export let QueryParam = query;
+export let QueryParams = query;
 export let Observe = observe;
 
 // Headers
