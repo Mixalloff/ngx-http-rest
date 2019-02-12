@@ -2,11 +2,11 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
-import {HttpRestModule} from "../../../src/ngx-http-annotations.module";
 import {HttpClient, HttpClientModule} from "@angular/common/http";
 import {ApiService} from "./services/api.service";
 import {CommonModule} from "@angular/common";
-import {HttpRestUtils} from "../../../src/ngx-http-annotations.utils";
+import {HttpRestUtils} from "../../projects/ngx-http-annotations/src/lib/ngx-http-annotations.utils";
+import {HttpRestModule} from "../../projects/ngx-http-annotations/src/lib/ngx-http-annotations.module";
 
 @NgModule({
   declarations: [
