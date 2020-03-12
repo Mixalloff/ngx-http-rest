@@ -5,7 +5,10 @@ import { AppComponent } from './app.component';
 import {HttpClient, HttpClientModule} from "@angular/common/http";
 import {ApiService} from "./services/api.service";
 import {CommonModule} from "@angular/common";
-import {HttpRestUtils} from "../../projects/ngx-http-annotations/src/lib/ngx-http-annotations.utils";
+import {
+  HTTP_ANNOTATIONS_USE_MOCKS,
+  HttpRestUtils
+} from "../../projects/ngx-http-annotations/src/lib/ngx-http-annotations.utils";
 import {HttpRestModule} from "../../projects/ngx-http-annotations/src/lib/ngx-http-annotations.module";
 
 @NgModule({
@@ -18,7 +21,7 @@ import {HttpRestModule} from "../../projects/ngx-http-annotations/src/lib/ngx-ht
     HttpClientModule,
     HttpRestModule
   ],
-  providers: [ApiService],
+  providers: [ApiService, { provide: HTTP_ANNOTATIONS_USE_MOCKS, useValue: true }],
   bootstrap: [AppComponent]
 })
 export class AppModule {

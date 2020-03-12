@@ -12,7 +12,7 @@ import {
   DELETE
 } from '../../../projects/ngx-http-annotations/src/public_api';
 import {HttpClient} from '@angular/common/http';
-import {from, Observable} from 'rxjs';
+import {from, Observable, of} from 'rxjs';
 import {flatMap, map, mergeAll, take, tap, filter} from 'rxjs/operators';
 
 @Injectable({
@@ -35,14 +35,14 @@ export class ApiService {
   })
   public getPost(@PathParam('id') id: number): Observable<any> {
     //return this.http.request('GET', 'https://jsonplaceholder.typicode.com/posts/'+id);
-    return null;
+    return of([{id: id, title: 'mock'}]);
   }
 
 
   @GET
   @Path('posts')
   public getPostForUserId(number: number, @QueryParam('userId') userId: number, @ResponseObservable res: Observable<any> = undefined): Observable<any> {
-    return res.pipe(map((response) => response.slice(0, number)));
+    return res? res.pipe(map((response) => response.slice(0, number))) : of({title: 'mock'});
   }
 
   @POST
@@ -52,29 +52,29 @@ export class ApiService {
   @Path('posts')
   public setPost(@Body post: any): Observable<any> {
     //return this.http.request('POST', 'https://jsonplaceholder.typicode.com/posts/', post);
-    return null;
+    return of([{id: 0, title: 'mock'},{id: 1, title: 'mock 1'}]);
   }
 
   @PUT
   @Path('posts/:id')
   public putPost(@ResponseObservable res: Observable<any>, @Body post: any, @PathParam('id') postId: number): Observable<any> {
     //return this.http.request('PUT', 'https://jsonplaceholder.typicode.com/posts/'+id, post);
-    return res.pipe(tap(data => console.log(`putPost for Post (${postId}) :`, data)));
+    return res? res.pipe(tap(data => console.log(`putPost for Post (${postId}) :`, data))) : of(post);
   }
 
   @DELETE
   @Path('posts/:id')
   public deletePost(@PathParam('id') postId: number): Observable<any> {
     //return this.http.request('DELETE', 'https://jsonplaceholder.typicode.com/posts/'+id);
-    return null;
+    return of([{id: postId, title: 'mock'}]);
   }
 
   @GET
   @Path('todos')
   public getTodosNotDone(@ResponseObservable res: Observable<any> = undefined): Observable<any> {
     //return this.http.request('GET', 'https://jsonplaceholder.typicode.com/todos');
-    return res.pipe(
-      map(todos => todos.filter(todo => !todo.completed)));
+    return res? res.pipe(
+      map(todos => todos.filter(todo => !todo.completed)))  : of({title: 'mock', completed: false});
   }
 
 

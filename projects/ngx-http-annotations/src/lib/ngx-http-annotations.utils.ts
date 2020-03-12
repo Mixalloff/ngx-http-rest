@@ -1,5 +1,8 @@
 import { HttpClient, HttpParams, HttpHeaders } from "@angular/common/http";
 import { HttpObserve } from "@angular/common/http/src/client";
+import {InjectionToken, Injector} from "@angular/core";
+
+export const HTTP_ANNOTATIONS_USE_MOCKS: InjectionToken<boolean> = new InjectionToken('HTTP_ANNOTATIONS_USE_MOCKS');
 
 interface httpRequestOptions {
   body?: any;
@@ -48,6 +51,7 @@ const RESOURSE_METADATA_ROOT = 'resources_metadata';
 export class HttpRestUtils {
 
   public static http: HttpClient = null;
+  public static appInjector: Injector = null;
 
   public static decorate(decoratorName: string, annotations: any, ...args: any[]) {
      switch (args.length) {
@@ -111,20 +115,25 @@ export class HttpRestUtils {
       // @dynamic
     return (target: any, key: string, descriptor: any) => {
       let originalFunction = descriptor.value;
-      descriptor.value = function (...args: any[]) {
-        const url = HttpRestUtils.collectUrl(target, key, args);
-        const body = HttpRestUtils.collectBody(target, key, args);
-        const search = HttpRestUtils.collectQueryParams(target, key, args);
-        const headers = HttpRestUtils.collectHeaders(target, key, args);
-        const producesType = HttpRestUtils.produce(target, key, args);
-        const observe = HttpRestUtils.getObserve(target, key, args);
-        const params: any = {
-          body,
-          params: search,
-          headers,
-          responseType: producesType,
-          observe
-        };
+
+        descriptor.value = function (...args: any[]) {
+          const url = HttpRestUtils.collectUrl(target, key, args);
+          const body = HttpRestUtils.collectBody(target, key, args);
+          const search = HttpRestUtils.collectQueryParams(target, key, args);
+          const headers = HttpRestUtils.collectHeaders(target, key, args);
+          const producesType = HttpRestUtils.produce(target, key, args);
+          const observe = HttpRestUtils.getObserve(target, key, args);
+          const params: any = {
+            body,
+            params: search,
+            headers,
+            responseType: producesType,
+            observe
+          };
+          const useMock: boolean = HttpRestUtils.appInjector.get(HTTP_ANNOTATIONS_USE_MOCKS, false);
+          if (useMock) {
+            return originalFunction(args);
+          }
           let request = HttpRestUtils.http.request(requestMethodName, url, params);
 
           const responseIndex = HttpRestUtils.collectResponseIndex(target, key, args);
@@ -132,7 +141,7 @@ export class HttpRestUtils {
           if (responseIndex >= 0) {
             const newArgs = args;
             if (args.length > responseIndex) {
-                newArgs[responseIndex] = request;
+              newArgs[responseIndex] = request;
             } else {
               newArgs.splice(responseIndex, 0, request);
             }
@@ -141,7 +150,8 @@ export class HttpRestUtils {
           }
 
           return request;
-      };
+        };
+
     };
   }
 
