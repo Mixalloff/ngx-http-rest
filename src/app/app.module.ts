@@ -6,8 +6,7 @@ import {HttpClient, HttpClientModule} from "@angular/common/http";
 import {ApiService} from "./services/api.service";
 import {CommonModule} from "@angular/common";
 import {
-  HTTP_ANNOTATIONS_USE_MOCKS,
-  HttpRestUtils
+  HTTP_ANNOTATIONS_USE_MOCKS
 } from "../../projects/ngx-http-annotations/src/lib/ngx-http-annotations.utils";
 import {HttpRestModule} from "../../projects/ngx-http-annotations/src/lib/ngx-http-annotations.module";
 
@@ -21,16 +20,15 @@ import {HttpRestModule} from "../../projects/ngx-http-annotations/src/lib/ngx-ht
     HttpClientModule,
     HttpRestModule
   ],
-  providers: [ApiService, { provide: HTTP_ANNOTATIONS_USE_MOCKS, useValue: true }],
+  providers: [ApiService, { provide: HTTP_ANNOTATIONS_USE_MOCKS, useValue: (url, requestType, params, args): boolean => {
+       console.log('useMock : ', url, requestType, params, args);
+      return params.headers && typeof params.headers.useMock !== undefined && params.headers.useMock === "true";
+    } }],
   bootstrap: [AppComponent]
 })
 export class AppModule {
-  constructor(private http: HttpClient) {
-    console.log('AppModule constructor 1 : ', HttpRestUtils.http, http);
-    if (!HttpRestUtils.http) {
-        HttpRestUtils.http = http;
-        console.log('AppModule constructor 2 : ', http, HttpRestUtils.http);
-    }
+  constructor() {
+
 
   }
 }

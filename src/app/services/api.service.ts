@@ -31,18 +31,28 @@ export class ApiService {
   @GET
   @Path('posts/:id')
   @Headers({
-    'someHeader2': 'hackedHeader2',
+    'useMock': 'false',
   })
   public getPost(@PathParam('id') id: number): Observable<any> {
     //return this.http.request('GET', 'https://jsonplaceholder.typicode.com/posts/'+id);
-    return of([{id: id, title: 'mock'}]);
+    return of([{id: id, title: 'mock false'}]);
+  }
+
+  @GET
+  @Path('posts/:id')
+  @Headers({
+    'useMock': 'true',
+  })
+  public getPostMock(@PathParam('id') id: number): Observable<any> {
+    //return this.http.request('GET', 'https://jsonplaceholder.typicode.com/posts/'+id);
+    return of([{id: id, title: 'mock true'}]);
   }
 
 
   @GET
   @Path('posts')
   public getPostForUserId(number: number, @QueryParam('userId') userId: number, @ResponseObservable res: Observable<any> = undefined): Observable<any> {
-    return res? res.pipe(map((response) => response.slice(0, number))) : of({title: 'mock'});
+    return res? res.pipe(map((response) => response.slice(0, number))) : of([{id:0, title: 'mock 0'}, {id:1, title: 'mock 1'}, {id:2, title: 'mock 2'}]);
   }
 
   @POST
@@ -73,6 +83,7 @@ export class ApiService {
   @Path('todos')
   public getTodosNotDone(@ResponseObservable res: Observable<any> = undefined): Observable<any> {
     //return this.http.request('GET', 'https://jsonplaceholder.typicode.com/todos');
+    console.log('getTodosNotDone', res);
     return res? res.pipe(
       map(todos => todos.filter(todo => !todo.completed)))  : of({title: 'mock', completed: false});
   }

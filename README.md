@@ -155,18 +155,50 @@ Available annotations:
       return res.pipe(map((response) => response.slice(0, number)));
     }
   ```
+### Mocks calls
 
+To have a feature to enable mocks api. When enabled, will call directly the function rather than call the http request. 
+
+To enable Mocks : in a module provider use this :
+```typescript
+providers: [{ provide: HTTP_ANNOTATIONS_USE_MOCKS, useValue: true }]
+```
+You can specify a boolean value, or have a specific function, that will be used to know if the apps will use mock. 
+This could help you to define mock only for specific call.
+
+
+```typescript
+providers: [{ provide: HTTP_ANNOTATIONS_USE_MOCKS, useValue: (url, requestType, params, args): boolean => {
+       console.log('useMock : ', url, requestType, params, args);
+      return requestType === 'Get' ? true : false;
+    } }]
+```
+
+define your mocks by return a fake observable, with your mock data. 
+
+```typescript
+  @GET
+  @Path('posts/:id')
+  public getPost(@PathParam('id') id: number): Observable<any> {
+    return of([{id: id, title: 'mock true'}]);
+  }
+```
 
 ### Change logs 
 
 0.6.x
+
  -> updates to latest versions of Angular 
- -> Rename librery to ngx-http-annotations
+ -> Rename library to ngx-http-annotations
  -> add @ResponseObservable to transform response. 
  
 0.6.2 et 0.6.3 
+
  -> update to build library with angular, to avoid error when build in --prod 
- 
+
+0.7.x 
+
+ ->  Add a mock feature. 
 
 ### Source and issues 
 

@@ -130,16 +130,29 @@ export class HttpRestUtils {
             responseType: producesType,
             observe
           };
-          const useMock: boolean = HttpRestUtils.appInjector.get(HTTP_ANNOTATIONS_USE_MOCKS, false);
-          if (useMock) {
-            return originalFunction(args);
+          const newArgs = args;
+          const responseIndex = HttpRestUtils.collectResponseIndex(target, key, args);
+
+          let useMock: boolean | Function = HttpRestUtils.appInjector.get(HTTP_ANNOTATIONS_USE_MOCKS, false);
+          if (typeof useMock === 'function') {
+            const useMockFunction = useMock as Function;
+            useMock =  useMockFunction(url, requestMethodName, params, args);
+          }
+          if (useMock) { // If use mock is true, call original function, to get mock directly from function
+            if (responseIndex >= 0) {
+              if (args.length > responseIndex) {
+                newArgs[responseIndex] = undefined;
+              } else {
+                newArgs.splice(responseIndex, 0, undefined);
+              }
+            }
+            return originalFunction(...newArgs);
           }
           let request = HttpRestUtils.http.request(requestMethodName, url, params);
 
-          const responseIndex = HttpRestUtils.collectResponseIndex(target, key, args);
+
 
           if (responseIndex >= 0) {
-            const newArgs = args;
             if (args.length > responseIndex) {
               newArgs[responseIndex] = request;
             } else {

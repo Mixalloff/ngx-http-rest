@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {ApiService} from "./services/api.service";
+import {HTTP_ANNOTATIONS_USE_MOCKS} from "../../projects/ngx-http-annotations/src/lib/ngx-http-annotations.utils";
 
 @Component({
   selector: 'app-root',
@@ -15,11 +16,13 @@ export class AppComponent implements OnInit {
   public post4: any;
   public post5: any;
   public todos: any;
+  public postMock: any;
 
   constructor(private api: ApiService) {}
 
   ngOnInit(): void {
     this.api.getPost(1).subscribe((post)=>this.post1=post);
+    this.api.getPostMock(1).subscribe((post)=>this.postMock=post);
     this.api.getPostForUserId(3, 2).subscribe((post) => {
         console.log('Post2 :', post);
       this.post2=post;
