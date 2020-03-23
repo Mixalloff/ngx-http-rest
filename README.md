@@ -199,6 +199,8 @@ define your mocks by return a fake observable, with your mock data.
 0.7.x 
 
  ->  Add a mock feature. 
+ -> Update dependency to latest
+ 
 
 ### Source and issues 
 

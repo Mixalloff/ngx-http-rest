@@ -9,7 +9,7 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "build_lib": "ng build ngx-http-annotations && npm run copy-readme",
-    "copy-readme": "cp .\\README.md .\\dist\\ngx-http-annotations",
+    "copy-readme": "copyfiles ./README.md ./dist/ngx-http-annotations",
     "npm_pack": "cd dist/ngx-http-annotations && npm pack",
     "package": "npm run build_lib && npm run npm_pack",
     "publish": "cd dist/ngx-http-annotations && npm publish"
@@ -39,6 +39,7 @@
     "@types/jasminewd2": "~2.0.3",
     "@types/node": "^12.11.1",
     "codelyzer": "^5.1.2",
+    "copyfiles": "^2.2.0",
     "jasmine-core": "~2.99.1",
     "jasmine-spec-reporter": "~4.2.1",
     "karma": "~1.7.1",
