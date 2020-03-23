@@ -1,6 +1,6 @@
 {
   "name": "ngx-http-annotations",
-  "version": "0.6.3",
+  "version": "0.7.0",
   "description": "This is a library to angular 6+ to use http request via decorator/annotations",
   "peerDependencies": {
     "@angular/common": ">=6.0.0",
