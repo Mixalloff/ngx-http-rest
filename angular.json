@@ -13,6 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "aot": true,
             "outputPath": "dist/example-ngx-http-annotations",
             "index": "src/index.html",
             "main": "src/main.ts",
@@ -29,6 +30,12 @@
           },
           "configurations": {
             "production": {
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
@@ -131,7 +138,8 @@
           },
           "configurations": {
             "production": {
-              "project": "projects/ngx-http-annotations/ng-package.prod.json"
+              "project": "projects/ngx-http-annotations/ng-package.prod.json",
+              "tsConfig": "projects/ngx-http-annotations/tsconfig.lib.prod.json"
             }
           }
         },
@@ -158,5 +166,8 @@
       }
     }
   },
-  "defaultProject": "example-ngx-http-annotations"
+  "defaultProject": "example-ngx-http-annotations",
+  "cli": {
+    "analytics": "ccb5e103-d12f-4375-adf3-3b0114a333a4"
+  }
 }

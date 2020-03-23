@@ -1,5 +1,4 @@
 import { HttpClient, HttpParams, HttpHeaders } from "@angular/common/http";
-import { HttpObserve } from "@angular/common/http/src/client";
 import {InjectionToken, Injector} from "@angular/core";
 
 export const HTTP_ANNOTATIONS_USE_MOCKS: InjectionToken<boolean> = new InjectionToken('HTTP_ANNOTATIONS_USE_MOCKS');
@@ -8,7 +7,7 @@ interface httpRequestOptions {
   body?: any;
   headers?: HttpHeaders;
   params?: HttpParams;
-  observe?: HttpObserve;
+  observe?: 'body' | 'events' | 'response';
   reportProgress?: boolean;
   responseType?: 'arraybuffer' | 'blob' | 'json' | 'text';
   withCredentials?: boolean;
